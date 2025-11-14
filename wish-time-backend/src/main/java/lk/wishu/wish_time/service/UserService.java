@@ -2,19 +2,17 @@ package lk.wishu.wish_time.service;
 
 
 //import lk.wishu.dto.request.SignUpRequestDTO;
-import lk.wishu.wish_time.dto.request.SignUpRequestDTO;
+import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -58,7 +56,7 @@ public class UserService {
 
     }
 
-    public void insert(SignUpRequestDTO data){
+    public void insert(SignUpRequest data){
         User user = new User();
         user.setUserName(data.getUserName());
         System.out.println(data.getPassword()+ " User password");

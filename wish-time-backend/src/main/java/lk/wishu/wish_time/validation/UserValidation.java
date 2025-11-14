@@ -1,6 +1,6 @@
 package lk.wishu.wish_time.validation;
 
-import lk.wishu.wish_time.dto.request.SignUpRequestDTO;
+import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,7 +57,7 @@ public class UserValidation {
      * @param email
      * @return String message or null
      */
-    public  String validateEmail(String email){
+    public  String validateEmail(String email,boolean checkWithDB){
         if(email == null || email.isBlank() ){
             return "Email is required";
         }
@@ -67,9 +67,12 @@ public class UserValidation {
         if(!email.matches(ValidationUtil.EMAIL_REGEX)){
             return "Inappropriate email address";
         }
-        if(userService.getUserByEmail(email) != null){
-            return "Email already exists";
+        if(checkWithDB){
+            if(userService.getUserByEmail(email) != null){
+                return "Email already exists";
+            }
         }
+
         return null;
     }
     /**
@@ -91,7 +94,7 @@ public class UserValidation {
      * @param userName
      * @return String message or null
      */
-    public String validateUsername(String userName){
+    public String validateUsername(String userName,boolean checkWithDB){
         if( userName == null || userName.isBlank() ){
             return "Username is required";
         }
@@ -99,9 +102,11 @@ public class UserValidation {
             return "Username can't be longer than 45 characters.";
         }
         try {
-            if(userService.getUserByUsername(userName) != null){
-                return "Username already exists";
-            }
+           if(checkWithDB){
+               if(userService.getUserByUsername(userName) != null){
+                   return "Username already exists";
+               }
+           }
         }catch (UsernameNotFoundException e){
 
         }
@@ -112,13 +117,13 @@ public class UserValidation {
      * @param data
      * @return String message or null
      */
-    public HashMap<String,String> validate(SignUpRequestDTO data){
+    public HashMap<String,String> validate(SignUpRequest data){
         HashMap<String,String> map = new HashMap<>();
         String firstNameError = this.validateFirstName(data.getFirstName());
         String lastNameError = this.validateLastName(data.getLastName());
-        String emailError = this.validateEmail(data.getEmail());
+        String emailError = this.validateEmail(data.getEmail(),true);
         String passwordError = this.validatePassword(data.getPassword());
-        String usernameError = this.validateUsername(data.getUserName());
+        String usernameError = this.validateUsername(data.getUserName(),true);
 
         if(firstNameError != null){
             map.put("firstName", firstNameError);

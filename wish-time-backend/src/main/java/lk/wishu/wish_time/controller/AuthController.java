@@ -1,10 +1,9 @@
 package lk.wishu.wish_time.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import lk.wishu.wish_time.dto.request.SignInRequestDTO;
-import lk.wishu.wish_time.dto.request.SignUpRequestDTO;
+import lk.wishu.wish_time.dto.request.SignInRequest;
+import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.dto.response.SignInResponse;
-import lk.wishu.wish_time.dto.response.SignUpResopnseDTO;
+import lk.wishu.wish_time.dto.response.SignUpResopnse;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.service.JWTService;
 import lk.wishu.wish_time.service.UserService;
@@ -15,14 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.webauthn.authentication.WebAuthnAuthenticationRequestToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth")
@@ -39,37 +35,54 @@ public class AuthController {
     private UserValidation userValidation;
 
     @PostMapping(value = "/signIn")
-    public ResponseEntity<SignInResponse> signIn( @RequestBody SignInRequestDTO data) {
-        SignInResponse res = new SignInResponse();
-        ResponseEntity<SignInResponse> response;
-        User user = userService.getUserByUsername(data.getUsername());
-        if (passwordEncoder.matches(data.getPassword(), user.getPassword())) {
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword());
-//            token.setDetails(request);
-                Authentication authenticate = authenticationManager.authenticate(token);
+    public ResponseEntity<SignInResponse> signIn( @RequestBody SignInRequest data) {
+        HashMap<String,String> errors = new HashMap<>();
+        SignInResponse res =  new SignInResponse();
+        ResponseEntity<SignInResponse> response = null;
 
-                if (authenticate.isAuthenticated()) {
-                    res.setToken(jwtService.getJWTToken(user.getUserName()));
-                    response = new ResponseEntity<>(res, HttpStatus.OK);
-                } else {
-                    List<String> errors = new ArrayList<>();
-                    errors.add("Authentication error");
-                    response = new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
-                }
+        if(data.getUsername() == null ||data.getUsername().isBlank()){
+            errors.put("username", "Username is required");
+        }
+        if(data.getPassword() == null || data.getPassword().isBlank()){
+            errors.put("password", "Password is required");
+        }
+
+        if(!errors.isEmpty()){
+            res.setErrors(errors);
+            response = new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }else{
-            List<String> errors = new ArrayList<>();
-            errors.add("Username or password is incorrect");
-            response = new ResponseEntity<>(res,HttpStatus.UNAUTHORIZED);
+            try{
+                User user = userService.getUserByUsername(data.getUsername());
+                if(passwordEncoder.matches(data.getPassword(), user.getPassword())){
+                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword());
+                    Authentication authentication = authenticationManager.authenticate(token);
+                    if(authentication.isAuthenticated()){
+                        res.setToken(jwtService.getJWTToken(user.getUserName()));
+                        response = new ResponseEntity<>(res, HttpStatus.OK);
+                    }else{
+                        errors.put("auth", "Authentication Failed");
+                        res.setErrors(errors);
+                        response = new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+                    }
+                }else{
+                    throw new UsernameNotFoundException("Invalid username or password");
+                }
+            }catch (UsernameNotFoundException e){
+                e.printStackTrace();
+                errors.put("credentials", "Username or password is incorrect");
+                res.setErrors(errors);
+                response =   new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
         }
 
 
-        return response;
+return response;
     }
 
     @PostMapping(value = "/signUp")
-    public ResponseEntity<SignUpResopnseDTO> signUp( @RequestBody SignUpRequestDTO data) {
+    public ResponseEntity<SignUpResopnse> signUp(@RequestBody SignUpRequest data) {
         HashMap<String,String> erros = userValidation.validate(data);
-        SignUpResopnseDTO res = new SignUpResopnseDTO();
+        SignUpResopnse res = new SignUpResopnse();
         if(!erros.isEmpty()){
 
             res.setErrors(erros);

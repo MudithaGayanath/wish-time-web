@@ -1,9 +1,8 @@
 package lk.wishu.wish_time.validation;
 
-import lk.wishu.wish_time.dto.request.SignUpRequestDTO;
+import lk.wishu.wish_time.dto.request.SignUpRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
@@ -18,7 +17,7 @@ public class UserValidationTest {
 
     @Test
     public void validation(){
-        SignUpRequestDTO data = new SignUpRequestDTO();
+        SignUpRequest data = new SignUpRequest();
         data.setFirstName("Mudit kha");
         data.setLastName("");
 

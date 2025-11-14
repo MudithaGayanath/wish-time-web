@@ -8,6 +8,6 @@ import java.util.HashMap;
 
 @Data
 @Setter @Getter
-public class SignUpResopnseDTO {
+public class SignUpResopnse {
     private HashMap<String,String> errors;
 }
