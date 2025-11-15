@@ -25,7 +25,7 @@ public class Task {
     @Column(name = "estimated_time",nullable = false)
     private double estimatedTime;
 
-    @Column(name = "estimated_time",nullable = false)
+    @Column(name = "created_at",nullable = false)
     private LocalDateTime createAt;
 
     @Column(name = "updated_at")
