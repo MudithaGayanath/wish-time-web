@@ -20,4 +20,8 @@ public class PriorityService {
     public List<Priority> getAll() {
         return priorityRepo.findAll();
     }
+
+    public Priority getByName(String name){
+        return priorityRepo.findByNama(name).orElse(null);
+    }
 }
