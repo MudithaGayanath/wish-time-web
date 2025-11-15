@@ -15,6 +15,7 @@ A modern and educational Spring Boot project designed to explore and understand 
 * DTO (Data Transfer Object) usage
 * Integration of authentication/authorization concepts (JWT-ready structure)
 * Best practices for building maintainable backend systems
+* Test automation using Selenium
 
 This project is ideal for beginners who want hands-on experience with Spring Boot or anyone revising core backend concepts.
 
