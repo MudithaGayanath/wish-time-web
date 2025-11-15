@@ -39,7 +39,7 @@ The main purpose of this project is to **study and experiment** with:
 * **Spring Boot** (Web, Security, Validation)
 * **Maven**
 * **Spring Data JPA** (optional based on project features)
-* **MySQL / H2** database
+* **MySQL** database
 * **Lombok** for boilerplate reduction
 * **React** (Frontend) for building the UI** for boilerplate reduction
 
