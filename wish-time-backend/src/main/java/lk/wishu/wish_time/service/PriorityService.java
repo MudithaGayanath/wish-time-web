@@ -17,10 +17,19 @@ public class PriorityService {
     @Autowired
     private PriorityRepo priorityRepo;
 
+    /**
+     *  To get all priorities
+     * @return List<Priority>
+     */
     public List<Priority> getAll() {
         return priorityRepo.findAll();
     }
 
+    /**
+     *
+     * @param name of priority
+     * @return Priority or Null
+     */
     public Priority getByName(String name){
         return priorityRepo.findByNama(name).orElse(null);
     }
