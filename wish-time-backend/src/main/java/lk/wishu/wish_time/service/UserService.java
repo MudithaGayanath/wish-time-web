@@ -3,8 +3,11 @@ package lk.wishu.wish_time.service;
 
 //import lk.wishu.dto.request.SignUpRequestDTO;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
+import lk.wishu.wish_time.dto.request.UserUpdateRequest;
+import lk.wishu.wish_time.dto.response.UserUpdateResponse;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.repository.UserRepo;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,12 +39,12 @@ public class UserService {
      * @return User objec
      * @throws UsernameNotFoundException
      */
-    public User getUserByUsername(String userName) throws UsernameNotFoundException {
+    public User getUserByUsername(String userName)  {
         System.out.println("getUserByUsername in user service "+userName);
         User user = userRepo.findByUserName(userName).orElse(null);
         if (user == null){
             System.out.println("user not found ");
-            throw new UsernameNotFoundException("No user found with username: " + userName);
+            return null;
         }
         System.out.println(user.getEmail());
         return user;
@@ -69,9 +72,34 @@ public class UserService {
         userRepo.save(user);
     }
 
+    public UserUpdateResponse update(UserUpdateRequest data)throws HibernateException {
+        User user = this.getUserByUsername(data.getUserName());
+        user.setFirstName(data.getFirstName());
+        user.setLastName(data.getLastName());
+        user.setEmail(data.getEmail());
+        user.setPassword(passwordEncoder.encode(data.getPassword()));
+        user.setUpdatedAt(LocalDateTime.now());
+
+        user.setUserStatus(userStatusService.getUserStatusById(Integer.parseInt(data.getStatusId())));
+
+        user =  userRepo.save(user);
+        UserUpdateResponse response = new UserUpdateResponse();
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
+        response.setUserName(user.getUserName());
+        response.setCreatedAt(String.valueOf(user.getCreatedAt()));
+        response.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+
+
+return response;
+    }
+
     public User getUserByEmail(String email){
         return userRepo.findByEmail(email).orElse(null);
     }
+
+
 
     public User getUserById(int userId){
       return   userRepo.findById(userId).orElse(null);

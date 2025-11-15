@@ -1,7 +1,11 @@
 package lk.wishu.wish_time.validation;
 
 import lk.wishu.wish_time.dto.request.SignUpRequest;
+import lk.wishu.wish_time.dto.request.UserUpdateRequest;
+import lk.wishu.wish_time.entity.User;
+import lk.wishu.wish_time.entity.UserStatus;
 import lk.wishu.wish_time.service.UserService;
+import lk.wishu.wish_time.service.UserStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -9,16 +13,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserValidation {
-
+    @Autowired
+    private UserStatusService  userStatusService;
     @Autowired
     private UserService userService;
 
     /**
-     * To validate first name filed in SignUp
+     * To validate first name filed
      * @param firstName
      * @return String message or null
      */
@@ -36,7 +42,7 @@ public class UserValidation {
     }
 
     /**
-     * To validate last name filed in SignUp
+     * To validate last name filed
      * @param lastName
      * @return String message or null
      */
@@ -53,11 +59,11 @@ public class UserValidation {
         return null;
     }
     /**
-     * To validate email filed in SignUp
+     * To validate email filed
      * @param email
      * @return String message or null
      */
-    public  String validateEmail(String email,boolean checkWithDB){
+    public  String validateEmail(String email){
         if(email == null || email.isBlank() ){
             return "Email is required";
         }
@@ -67,16 +73,11 @@ public class UserValidation {
         if(!email.matches(ValidationUtil.EMAIL_REGEX)){
             return "Inappropriate email address";
         }
-        if(checkWithDB){
-            if(userService.getUserByEmail(email) != null){
-                return "Email already exists";
-            }
-        }
 
         return null;
     }
     /**
-     * To validate password filed in SignUp
+     * To validate password filed
      * @param password
      * @return String message or null
      */
@@ -90,56 +91,50 @@ public class UserValidation {
         return null;
     }
     /**
-     * To validate username filed in SignUp
+     * To validate username filed
      * @param userName
      * @return String message or null
      */
-    public String validateUsername(String userName,boolean checkWithDB){
+    public String validateUsername(String userName){
         if( userName == null || userName.isBlank() ){
             return "Username is required";
         }
         if(userName.length() > 45){
             return "Username can't be longer than 45 characters.";
         }
-        try {
-           if(checkWithDB){
-               if(userService.getUserByUsername(userName) != null){
-                   return "Username already exists";
-               }
-           }
-        }catch (UsernameNotFoundException e){
+        return null;
+    }
 
+    public String validateStatus(String statusId){
+        if(statusId == null || statusId.isBlank() ){
+            return "Status is required";
+        }
+       try {
+           if(userStatusService.getUserStatusById(Integer.parseInt(statusId)) == null){
+               return "Status does not exist";
+           }
+       }catch (NumberFormatException e){
+           return "Status must be integer";
+       }
+
+        return null;
+
+    }
+
+    public String isUsernameUsed(String userName){
+         if(userService.getUserByUsername(userName) != null){
+             return "Username is already used";
+         }
+         return null;
+    }
+    public String isEmailUsed(String email){
+        if(userService.getUserByEmail(email) != null){
+            return "Email is already used";
         }
         return null;
     }
-    /**
-     * To validate all filedes in SignUp
-     * @param data
-     * @return String message or null
-     */
-    public HashMap<String,String> validate(SignUpRequest data){
-        HashMap<String,String> map = new HashMap<>();
-        String firstNameError = this.validateFirstName(data.getFirstName());
-        String lastNameError = this.validateLastName(data.getLastName());
-        String emailError = this.validateEmail(data.getEmail(),true);
-        String passwordError = this.validatePassword(data.getPassword());
-        String usernameError = this.validateUsername(data.getUserName(),true);
 
-        if(firstNameError != null){
-            map.put("firstName", firstNameError);
-        }
-        if(lastNameError != null){
-            map.put("lastName", lastNameError);
-        }
-        if(emailError != null){
-            map.put("email", emailError);
-        }
-        if(passwordError != null){
-            map.put("password", passwordError);
-        }
-        if(usernameError != null){
-            map.put("username", usernameError);
-        }
-        return map;
-    }
+
+
+
 }

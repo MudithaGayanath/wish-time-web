@@ -15,15 +15,6 @@ public class UserValidationTest {
         Assertions.assertEquals("First name must contain alphanumeric characters",validation.validateFirstName("mudit kha"));
     }
 
-    @Test
-    public void validation(){
-        SignUpRequest data = new SignUpRequest();
-        data.setFirstName("Mudit kha");
-        data.setLastName("");
 
-        HashMap<String, String> validate = validation.validate(data);
-        System.out.println(validate);
-
-    }
 
 }

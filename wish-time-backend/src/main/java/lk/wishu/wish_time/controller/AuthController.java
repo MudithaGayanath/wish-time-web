@@ -2,6 +2,7 @@ package lk.wishu.wish_time.controller;
 
 import lk.wishu.wish_time.dto.request.SignInRequest;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
+import lk.wishu.wish_time.dto.response.BaseResponseDTO;
 import lk.wishu.wish_time.dto.response.SignInResponse;
 import lk.wishu.wish_time.dto.response.SignUpResopnse;
 import lk.wishu.wish_time.entity.User;
@@ -32,13 +33,13 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserValidation userValidation;
+    private UserValidation validation;
 
     @PostMapping(value = "/signIn")
-    public ResponseEntity<SignInResponse> signIn( @RequestBody SignInRequest data) {
+    public ResponseEntity<BaseResponseDTO> signIn(@RequestBody SignInRequest data) {
         HashMap<String,String> errors = new HashMap<>();
         SignInResponse res =  new SignInResponse();
-        ResponseEntity<SignInResponse> response = null;
+        ResponseEntity<BaseResponseDTO> response = null;
 
         if(data.getUsername() == null ||data.getUsername().isBlank()){
             errors.put("username", "Username is required");
@@ -48,7 +49,7 @@ public class AuthController {
         }
 
         if(!errors.isEmpty()){
-            res.setErrors(errors);
+//            res.setErrors(errors);
             response = new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }else{
             try{
@@ -76,15 +77,37 @@ public class AuthController {
         }
 
 
-return response;
+        return response;
     }
 
     @PostMapping(value = "/signUp")
-    public ResponseEntity<SignUpResopnse> signUp(@RequestBody SignUpRequest data) {
-        HashMap<String,String> erros = userValidation.validate(data);
+    public ResponseEntity<BaseResponseDTO> signUp(@RequestBody SignUpRequest data) {
+        HashMap<String,String> erros =  new HashMap<>();
+        //validation
+        String firstNameError = validation.validateFirstName(data.getFirstName());
+        String lastNameError = validation.validateLastName(data.getLastName());
+        String emailError = validation.validateEmail(data.getEmail());
+        String passwordError = validation.validatePassword(data.getPassword());
+        String usernameError = validation.validateUsername(data.getUserName());
+
+        if(firstNameError != null){
+            erros.put("firstName", firstNameError);
+        }
+        if(lastNameError != null){
+            erros.put("lastName", lastNameError);
+        }
+        if(emailError != null){
+            erros.put("email", emailError);
+        }
+        if(passwordError != null){
+            erros.put("password", passwordError);
+        }
+        if(usernameError != null){
+            erros.put("username", usernameError);
+        }
+
         SignUpResopnse res = new SignUpResopnse();
         if(!erros.isEmpty()){
-
             res.setErrors(erros);
             return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
         }
