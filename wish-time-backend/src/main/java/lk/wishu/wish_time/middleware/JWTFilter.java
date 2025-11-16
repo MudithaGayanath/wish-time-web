@@ -9,6 +9,7 @@ import lk.wishu.wish_time.service.JWTService;
 import lk.wishu.wish_time.service.MyUserDetailsService;
 import lk.wishu.wish_time.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +24,10 @@ import java.io.IOException;
 @Component
 public class JWTFilter extends OncePerRequestFilter {
     @Autowired
+    @Lazy
     private JWTService jwtService;
     @Autowired
+    @Lazy
     private MyUserDetailsService myUserDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

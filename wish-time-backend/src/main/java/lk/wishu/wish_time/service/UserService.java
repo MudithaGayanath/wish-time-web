@@ -2,67 +2,105 @@ package lk.wishu.wish_time.service;
 
 
 //import lk.wishu.dto.request.SignUpRequestDTO;
+
+import lk.wishu.wish_time.dto.request.SignInRequest;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.dto.request.UserUpdateRequest;
+import lk.wishu.wish_time.dto.response.BaseResponse;
+import lk.wishu.wish_time.dto.response.ErrorResponse;
+import lk.wishu.wish_time.dto.response.SignInResponse;
 import lk.wishu.wish_time.dto.response.UserUpdateResponse;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.repository.UserRepo;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
-    private  UserRepo userRepo;
+    private UserRepo userRepo;
 
     @Autowired
     @Lazy
-    private PasswordEncoder passwordEncoder ;
+    private JWTService jwtService;
+    @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserStatusService userStatusService;
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepo.findAll();
     }
 
 
     /**
+     * For JWT Filter
      *
-     * @param  userName
-     * @return User objec
-     * @throws UsernameNotFoundException
+     * @param userName
+     * @return User object
      */
-    public User getUserByUsername(String userName)  {
-        System.out.println("getUserByUsername in user service "+userName);
-        User user = userRepo.findByUserName(userName).orElse(null);
-        if (user == null){
-            System.out.println("user not found ");
-            return null;
-        }
-        System.out.println(user.getEmail());
-        return user;
+    public User getUserByUsername(String userName) {
+        return userRepo.findByUserName(userName).orElse(null);
     }
 
-    public boolean getUser(String userName,String password) {
-        User user = userRepo.findByUserName(userName).orElse(null);
-        if (user == null){
-            return false;
+
+    public ResponseEntity<BaseResponse> signIn(SignInRequest data) {
+        HashMap<String, String> errors = new HashMap<>();
+        if (data.getUsername() == null || data.getUsername().isBlank()) {
+            errors.put("username", "Username required");
         }
-        return true;
+        if (data.getPassword() == null || data.getPassword().isBlank()) {
+            errors.put("password", "Password required");
+        }
+
+        if (!errors.isEmpty()) {
+            return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            User user = this.getUserByUsername(data.getUsername());
+            if (passwordEncoder.matches(data.getPassword(), user.getPassword())) {
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword());
+                Authentication authentication = authenticationManager.authenticate(token);
+                if (authentication.isAuthenticated()) {
+                    SignInResponse res = new SignInResponse();
+                    res.setToken(jwtService.getJWTToken(user.getUserName()));
+                    return new ResponseEntity<>(res,HttpStatus.OK);
+                } else {
+                    errors.put("auth", "Authentication Failed");
+                    return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                throw new UsernameNotFoundException("Invalid username or password");
+            }
+        } catch (UsernameNotFoundException e) {
+            errors.put("credentials", "Username or password is incorrect");
+            return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+        }
 
     }
 
-    public void insert(SignUpRequest data){
+    public void insert(SignUpRequest data) {
         User user = new User();
         user.setUserName(data.getUserName());
-        System.out.println(data.getPassword()+ " User password");
+        System.out.println(data.getPassword() + " User password");
         user.setPassword(passwordEncoder.encode(data.getPassword()));
         user.setEmail(data.getEmail());
         user.setFirstName(data.getFirstName());
@@ -72,7 +110,7 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public UserUpdateResponse update(UserUpdateRequest data)throws HibernateException {
+    public UserUpdateResponse update(UserUpdateRequest data) throws HibernateException {
         User user = this.getUserByUsername(data.getUserName());
         user.setFirstName(data.getFirstName());
         user.setLastName(data.getLastName());
@@ -82,7 +120,7 @@ public class UserService {
 
         user.setUserStatus(userStatusService.getUserStatusById(Integer.parseInt(data.getStatusId())));
 
-        user =  userRepo.save(user);
+        user = userRepo.save(user);
         UserUpdateResponse response = new UserUpdateResponse();
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
@@ -92,16 +130,15 @@ public class UserService {
         response.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
 
 
-return response;
+        return response;
     }
 
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) {
         return userRepo.findByEmail(email).orElse(null);
     }
 
 
-
-    public User getUserById(int userId){
-      return   userRepo.findById(userId).orElse(null);
+    public User getUserById(int userId) {
+        return userRepo.findById(userId).orElse(null);
     }
 }

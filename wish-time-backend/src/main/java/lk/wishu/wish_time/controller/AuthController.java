@@ -2,13 +2,12 @@ package lk.wishu.wish_time.controller;
 
 import lk.wishu.wish_time.dto.request.SignInRequest;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
-import lk.wishu.wish_time.dto.response.BaseResponseDTO;
-import lk.wishu.wish_time.dto.response.SignInResponse;
-import lk.wishu.wish_time.dto.response.SignUpResopnse;
+import lk.wishu.wish_time.dto.response.*;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.service.JWTService;
 import lk.wishu.wish_time.service.UserService;
 import lk.wishu.wish_time.validation.UserValidation;
+import org.hibernate.collection.spi.BagSemantics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,97 +23,52 @@ import java.util.HashMap;
 @RestController
 @RequestMapping(value = "/api/v1/auth")
 public class AuthController {
-    @Autowired
-    private JWTService jwtService;
+
     @Autowired
     private UserService userService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserValidation validation;
+//    @Autowired
+//    private UserValidation validation;
 
     @PostMapping(value = "/signIn")
-    public ResponseEntity<BaseResponseDTO> signIn(@RequestBody SignInRequest data) {
-        HashMap<String,String> errors = new HashMap<>();
-        SignInResponse res =  new SignInResponse();
-        ResponseEntity<BaseResponseDTO> response = null;
-
-        if(data.getUsername() == null ||data.getUsername().isBlank()){
-            errors.put("username", "Username is required");
-        }
-        if(data.getPassword() == null || data.getPassword().isBlank()){
-            errors.put("password", "Password is required");
-        }
-
-        if(!errors.isEmpty()){
-//            res.setErrors(errors);
-            response = new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-        }else{
-            try{
-                User user = userService.getUserByUsername(data.getUsername());
-                if(passwordEncoder.matches(data.getPassword(), user.getPassword())){
-                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword());
-                    Authentication authentication = authenticationManager.authenticate(token);
-                    if(authentication.isAuthenticated()){
-                        res.setToken(jwtService.getJWTToken(user.getUserName()));
-                        response = new ResponseEntity<>(res, HttpStatus.OK);
-                    }else{
-                        errors.put("auth", "Authentication Failed");
-                        res.setErrors(errors);
-                        response = new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
-                    }
-                }else{
-                    throw new UsernameNotFoundException("Invalid username or password");
-                }
-            }catch (UsernameNotFoundException e){
-                e.printStackTrace();
-                errors.put("credentials", "Username or password is incorrect");
-                res.setErrors(errors);
-                response =   new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-            }
-        }
-
-
-        return response;
+    public ResponseEntity<BaseResponse> signIn(@RequestBody SignInRequest data) {
+         return  userService.signIn(data);
     }
 
-    @PostMapping(value = "/signUp")
-    public ResponseEntity<BaseResponseDTO> signUp(@RequestBody SignUpRequest data) {
-        HashMap<String,String> erros =  new HashMap<>();
-        //validation
-        String firstNameError = validation.validateFirstName(data.getFirstName());
-        String lastNameError = validation.validateLastName(data.getLastName());
-        String emailError = validation.validateEmail(data.getEmail());
-        String passwordError = validation.validatePassword(data.getPassword());
-        String usernameError = validation.validateUsername(data.getUserName());
-
-        if(firstNameError != null){
-            erros.put("firstName", firstNameError);
-        }
-        if(lastNameError != null){
-            erros.put("lastName", lastNameError);
-        }
-        if(emailError != null){
-            erros.put("email", emailError);
-        }
-        if(passwordError != null){
-            erros.put("password", passwordError);
-        }
-        if(usernameError != null){
-            erros.put("username", usernameError);
-        }
-
-        SignUpResopnse res = new SignUpResopnse();
-        if(!erros.isEmpty()){
-            res.setErrors(erros);
-            return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
-        }
-        userService.insert(data);
-        return new ResponseEntity<>(res,HttpStatus.OK);
-
-    }
+//    @PostMapping(value = "/signUp")
+//    public ResponseEntity<BaseResponseDTO> signUp(@RequestBody SignUpRequest data) {
+//        HashMap<String,String> erros =  new HashMap<>();
+//        //validation
+//        String firstNameError = validation.validateFirstName(data.getFirstName());
+//        String lastNameError = validation.validateLastName(data.getLastName());
+//        String emailError = validation.validateEmail(data.getEmail());
+//        String passwordError = validation.validatePassword(data.getPassword());
+//        String usernameError = validation.validateUsername(data.getUserName());
+//
+//        if(firstNameError != null){
+//            erros.put("firstName", firstNameError);
+//        }
+//        if(lastNameError != null){
+//            erros.put("lastName", lastNameError);
+//        }
+//        if(emailError != null){
+//            erros.put("email", emailError);
+//        }
+//        if(passwordError != null){
+//            erros.put("password", passwordError);
+//        }
+//        if(usernameError != null){
+//            erros.put("username", usernameError);
+//        }
+//
+//        SignUpResopnse res = new SignUpResopnse();
+//        if(!erros.isEmpty()){
+//            res.setErrors(erros);
+//            return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
+//        }
+//        userService.insert(data);
+//        return new ResponseEntity<>(res,HttpStatus.OK);
+//
+//    }
 
 
 }
