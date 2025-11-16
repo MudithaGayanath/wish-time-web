@@ -9,6 +9,6 @@ import java.util.HashMap;
 @Data
 @Getter
 @Setter
-public class ErrorResponse {
+public class ErrorResponse implements BaseResponse{
     private HashMap<String,String> errors;
 }

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PriorityRepo extends JpaRepository<Priority,Integer> {
 
-    Optional<Priority> findByNama(String name);
+    Optional<Priority> findByName(String name);
 }

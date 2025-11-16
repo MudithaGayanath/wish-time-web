@@ -30,8 +30,8 @@ public class SecurityConfig {
                 .csrf(c->c.disable())
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(r->
-//                        r.requestMatchers("/api/v1/auth/**").permitAll()
-                        r.requestMatchers("/api/**").permitAll()
+                        r.requestMatchers("/api/v1/auth/**").permitAll()
+//                        r.requestMatchers("/api/**").permitAll()
                                 .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .httpBasic(Customizer.withDefaults())

@@ -31,6 +31,6 @@ public class PriorityService {
      * @return Priority or Null
      */
     public Priority getByName(String name){
-        return priorityRepo.findByNama(name).orElse(null);
+        return priorityRepo.findByName(name).orElse(null);
     }
 }
