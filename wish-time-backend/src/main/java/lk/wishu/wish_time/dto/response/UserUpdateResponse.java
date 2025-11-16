@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UserUpdateResponse extends BaseResponseDTO {
+public class UserUpdateResponse implements BaseResponse {
     private Integer id;
     private String firstName;
     private String lastName;
