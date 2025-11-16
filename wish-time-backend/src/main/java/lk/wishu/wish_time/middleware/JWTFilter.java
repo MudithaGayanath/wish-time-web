@@ -49,6 +49,9 @@ public class JWTFilter extends OncePerRequestFilter {
         } catch (NullPointerException e) {
         } catch (ArrayIndexOutOfBoundsException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
         filterChain.doFilter(request,response);
     }

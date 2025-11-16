@@ -38,7 +38,7 @@ public class JWTService {
                 .compact();
     }
 
-    public String getUsername(String token){
+    public String getUsername(String token) throws Exception{
         System.out.println("getUsername called");
 
         // Defensive check: Ensure the token is not null or empty
@@ -46,8 +46,6 @@ public class JWTService {
             System.err.println("JWTService: Token input is null or empty.");
             return null;
         }
-
-        try {
             // The parsing logic is correct
             return Jwts
                     .parserBuilder()
@@ -55,12 +53,7 @@ public class JWTService {
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
-        } catch (Exception e){
-            // Catch JwtException (like MalformedJwtException, ExpiredJwtException, etc.)
-            System.err.println("JWTService: Failed to parse token: " + e.getMessage());
-            // e.printStackTrace(); // Optional: remove stack trace for cleaner logs
-            return null;
-        }
+
     }
 
     /**

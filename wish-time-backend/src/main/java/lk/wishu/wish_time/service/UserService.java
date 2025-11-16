@@ -175,4 +175,13 @@ public class UserService {
     public User getUserById(int userId) {
         return userRepo.findById(userId).orElse(null);
     }
+
+    /**
+     * To verify user id is stored in the database
+     * @param id
+     * @return boolean
+     */
+    protected boolean isValidId(int id){
+        return this.userRepo.findById(id).isPresent();
+    }
 }

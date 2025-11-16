@@ -38,6 +38,10 @@ public class TaskTypeService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    public TaskType getTaskTypeById(int id){
+        return taskTypeRepo.findById(id).orElse(null);
+    }
+
     /**
      * To insert new task type
      *
@@ -56,7 +60,16 @@ public class TaskTypeService {
         return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
     }
 
-    public  HashMap<String, String> validate(TaskTypeRequest data) {
+    /**
+     * To validate task type id
+     * @param id
+     * @return boolean
+     */
+    protected boolean  isValidId(int id){
+        return taskTypeRepo.findById(id).isPresent();
+    }
+
+    private   HashMap<String, String> validate(TaskTypeRequest data) {
         HashMap<String, String> map = new HashMap<>();
 
         if (data.getName() == null || data.getName().isBlank()) {
