@@ -2,7 +2,6 @@ package lk.wishu.wish_time.Controller;
 
 import lk.wishu.wish_time.controller.AuthController;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
-import lk.wishu.wish_time.dto.response.SignUpResopnse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -12,6 +12,7 @@ import lk.wishu.wish_time.dto.response.SignInResponse;
 import lk.wishu.wish_time.dto.response.UserUpdateResponse;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.repository.UserRepo;
+import lk.wishu.wish_time.validation.UserValidation;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,6 +45,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserStatusService userStatusService;
+
+    @Autowired
+    @Lazy
+    private UserValidation validation;
 
     public List<User> getUsers() {
         return userRepo.findAll();
@@ -97,7 +102,35 @@ public class UserService {
 
     }
 
-    public void insert(SignUpRequest data) {
+    public ResponseEntity<BaseResponse> insert(SignUpRequest data) {
+
+        HashMap<String,String> erros =  new HashMap<>();
+//        //validation
+        String firstNameError = validation.validateFirstName(data.getFirstName());
+        String lastNameError = validation.validateLastName(data.getLastName());
+        String emailError = validation.validateEmail(data.getEmail());
+        String passwordError = validation.validatePassword(data.getPassword());
+        String usernameError = validation.validateUsername(data.getUserName());
+
+        if(firstNameError != null){
+            erros.put("firstName", firstNameError);
+        }
+        if(lastNameError != null){
+            erros.put("lastName", lastNameError);
+        }
+        if(emailError != null){
+            erros.put("email", emailError);
+        }
+        if(passwordError != null){
+            erros.put("password", passwordError);
+        }
+        if(usernameError != null){
+            erros.put("username", usernameError);
+        }
+
+        if(!erros.isEmpty()){
+            return new ResponseEntity<>(new ErrorResponse(erros),HttpStatus.BAD_REQUEST);
+        }
         User user = new User();
         user.setUserName(data.getUserName());
         System.out.println(data.getPassword() + " User password");
@@ -108,6 +141,7 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUserStatus(userStatusService.getUserStatusByStatusName(UserStatusService.ACTIVE));
         userRepo.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public UserUpdateResponse update(UserUpdateRequest data) throws HibernateException {

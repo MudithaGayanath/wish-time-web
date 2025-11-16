@@ -26,49 +26,14 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private UserValidation validation;
 
     @PostMapping(value = "/signIn")
     public ResponseEntity<BaseResponse> signIn(@RequestBody SignInRequest data) {
          return  userService.signIn(data);
     }
 
-//    @PostMapping(value = "/signUp")
-//    public ResponseEntity<BaseResponseDTO> signUp(@RequestBody SignUpRequest data) {
-//        HashMap<String,String> erros =  new HashMap<>();
-//        //validation
-//        String firstNameError = validation.validateFirstName(data.getFirstName());
-//        String lastNameError = validation.validateLastName(data.getLastName());
-//        String emailError = validation.validateEmail(data.getEmail());
-//        String passwordError = validation.validatePassword(data.getPassword());
-//        String usernameError = validation.validateUsername(data.getUserName());
-//
-//        if(firstNameError != null){
-//            erros.put("firstName", firstNameError);
-//        }
-//        if(lastNameError != null){
-//            erros.put("lastName", lastNameError);
-//        }
-//        if(emailError != null){
-//            erros.put("email", emailError);
-//        }
-//        if(passwordError != null){
-//            erros.put("password", passwordError);
-//        }
-//        if(usernameError != null){
-//            erros.put("username", usernameError);
-//        }
-//
-//        SignUpResopnse res = new SignUpResopnse();
-//        if(!erros.isEmpty()){
-//            res.setErrors(erros);
-//            return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
-//        }
-//        userService.insert(data);
-//        return new ResponseEntity<>(res,HttpStatus.OK);
-//
-//    }
+    @PostMapping(value = "/signUp")
+    public ResponseEntity<BaseResponse> signUp(@RequestBody SignUpRequest data) { return userService.insert(data);}
 
 
 }
