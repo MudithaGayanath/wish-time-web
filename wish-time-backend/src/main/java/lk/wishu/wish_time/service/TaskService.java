@@ -1,9 +1,13 @@
 package lk.wishu.wish_time.service;
 
 import lk.wishu.wish_time.dto.request.TaskRequest;
+import lk.wishu.wish_time.dto.response.BaseResponse;
+import lk.wishu.wish_time.dto.response.ErrorResponse;
 import lk.wishu.wish_time.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,8 +35,12 @@ public class TaskService {
 
 
 
-    public void insert(String token, TaskRequest data){
+    public ResponseEntity<BaseResponse> insert(String token, TaskRequest data){
         HashMap<String,String> errors = this.validate(data);
+        if(!errors.isEmpty()){
+          return   new ResponseEntity(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+        }
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
 
     private HashMap<String, String> validate(TaskRequest data) {
