@@ -22,6 +22,12 @@ public class TaskService {
     @Autowired
     @Lazy
     private TaskTypeService taskTypeService;
+    @Autowired
+    @Lazy
+    private TaskStatusService taskStatusService;
+    @Autowired
+    @Lazy
+    private PriorityService priorityService;
 
 
 
@@ -67,6 +73,32 @@ public class TaskService {
                 }
             }catch (NumberFormatException e){
                 map.put("taskTypeId","Task type must be a number");
+            }
+        }
+
+        // validate task status id
+        if(data.getStatusId() == null || data.getStatusId().isBlank()){
+            map.put("statusId","Status required");
+        }else {
+            try {
+                if(!taskStatusService.isValidId(Integer.parseInt(data.getStatusId()))){
+                    map.put("statusId","Invalid status");
+                }
+            }catch (NumberFormatException e){
+                map.put("statusId","Status must be a number");
+            }
+        }
+
+//        validate priority id
+        if(data.getPriorityId() == null || data.getPriorityId().isBlank()){
+            map.put("priorityId","Priority required");
+        }else{
+            try {
+                if(!priorityService.isValidId(Integer.parseInt(data.getPriorityId()))){
+                    map.put("priorityId","Invalid priority");
+                }
+            }catch (NumberFormatException e){
+                map.put("priorityId","Priority must be a number");
             }
         }
 
