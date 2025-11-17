@@ -21,4 +21,7 @@ public class TaskStatusService {
         return this.taskStatusRepo.findByName(name).orElse(null);
     }
 
+    protected boolean isValidId(int id){
+        return this.taskStatusRepo.findById(id).isPresent();
+    }
 }

@@ -44,4 +44,9 @@ public class PriorityService {
     public Priority getByName(String name){
         return priorityRepo.findByName(name).orElse(null);
     }
+
+    protected boolean isValidId(int id){
+        return this.priorityRepo.findById(id).isPresent();
+    }
+
 }
