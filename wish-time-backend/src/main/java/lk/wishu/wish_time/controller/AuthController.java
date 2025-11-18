@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1/auth")
 public class AuthController {

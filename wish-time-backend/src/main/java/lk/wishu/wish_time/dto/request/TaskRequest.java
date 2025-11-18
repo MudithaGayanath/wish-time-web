@@ -11,6 +11,6 @@ public class TaskRequest {
     private String description;
     private String estimatedTime;
     private String taskTypeId;
-    private String statusId;
+//    private String statusId;
     private String priorityId;
 }

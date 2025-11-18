@@ -13,9 +13,9 @@ import java.util.List;
 @Service
 public class PriorityService {
 
-    private static final String HIGH = "High";
-    private static final String MEDIUM = "Medium";
-    private static final String LOW = "Low";
+    public static final String HIGH = "High";
+    public static final String MEDIUM = "Medium";
+    public static final String LOW = "Low";
 
     @Autowired
     private PriorityRepo priorityRepo;
@@ -44,6 +44,8 @@ public class PriorityService {
     public Priority getByName(String name){
         return priorityRepo.findByName(name).orElse(null);
     }
+
+    protected Priority getById(int id){ return priorityRepo.findById(id).orElse(null);}
 
     protected boolean isValidId(int id){
         return this.priorityRepo.findById(id).isPresent();

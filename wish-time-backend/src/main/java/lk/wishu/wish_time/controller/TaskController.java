@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1/task")
 public class TaskController {
@@ -17,6 +18,6 @@ public class TaskController {
 
     @PostMapping(value = "/post/today")
     public ResponseEntity<BaseResponse> postToday(@RequestHeader(value = "Authorization") String auth, @RequestBody TaskRequest data){
-        return this.taskService.insert(auth.split(" ")[1],data);
+        return this.taskService.insertToday(auth.split(" ")[1],data);
     }
 }

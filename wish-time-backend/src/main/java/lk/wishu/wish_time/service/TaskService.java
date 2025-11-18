@@ -3,6 +3,7 @@ package lk.wishu.wish_time.service;
 import lk.wishu.wish_time.dto.request.TaskRequest;
 import lk.wishu.wish_time.dto.response.BaseResponse;
 import lk.wishu.wish_time.dto.response.ErrorResponse;
+import lk.wishu.wish_time.entity.Task;
 import lk.wishu.wish_time.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -35,11 +36,19 @@ public class TaskService {
 
 
 
-    public ResponseEntity<BaseResponse> insert(String token, TaskRequest data){
+    public ResponseEntity<BaseResponse> insertToday(String token, TaskRequest data){
         HashMap<String,String> errors = this.validate(data);
         if(!errors.isEmpty()){
           return   new ResponseEntity(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
         }
+        Task task = new Task();
+        task.setTitle(data.getTitle());
+        task.setDescription(data.getDescription());
+        task.setEstimatedTime(Double.parseDouble(data.getEstimatedTime()));
+        task.setCreateAt(java.time.LocalDateTime.now());
+        task.setTaskStatus(taskStatusService.getTaskStatusByName(TaskStatusService.PENDING));
+        task.setPriority(priorityService.getById(Integer.parseInt(data.getPriorityId())));
+        taskRepo.save(task);
         return  new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -85,17 +94,17 @@ public class TaskService {
         }
 
         // validate task status id
-        if(data.getStatusId() == null || data.getStatusId().isBlank()){
-            map.put("statusId","Status required");
-        }else {
-            try {
-                if(!taskStatusService.isValidId(Integer.parseInt(data.getStatusId()))){
-                    map.put("statusId","Invalid status");
-                }
-            }catch (NumberFormatException e){
-                map.put("statusId","Status must be a number");
-            }
-        }
+//        if(data.getStatusId() == null || data.getStatusId().isBlank()){
+//            map.put("statusId","Status required");
+//        }else {
+//            try {
+//                if(!taskStatusService.isValidId(Integer.parseInt(data.getStatusId()))){
+//                    map.put("statusId","Invalid status");
+//                }
+//            }catch (NumberFormatException e){
+//                map.put("statusId","Status must be a number");
+//            }
+//        }
 
 //        validate priority id
         if(data.getPriorityId() == null || data.getPriorityId().isBlank()){
@@ -109,6 +118,9 @@ public class TaskService {
                 map.put("priorityId","Priority must be a number");
             }
         }
+
+//        duplicate validation
+//        if(data.getTitle())
 
         return map;
     }
