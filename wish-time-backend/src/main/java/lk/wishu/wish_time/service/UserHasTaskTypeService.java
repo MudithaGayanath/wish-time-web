@@ -93,6 +93,10 @@ public class UserHasTaskTypeService {
         return this.userHasTaskTypeRepo.findByUserIdAndTaskTypeId(userId, taskTypeId).orElse(null) != null;
     }
 
+    protected UserHasTaskType getUserHasTaskType(Integer userId, Integer taskTypeId) {
+        return this.userHasTaskTypeRepo.findByUserIdAndTaskTypeId(userId,taskTypeId).orElse(null);
+    }
 
+    protected boolean isHave(Integer userId, Integer taskTypeId) {return this.isAlreadyExists(userId,taskTypeId);}
 
 }

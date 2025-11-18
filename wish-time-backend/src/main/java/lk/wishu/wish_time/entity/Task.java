@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,7 +27,7 @@ public class Task {
     private double estimatedTime;
 
     @Column(name = "created_at",nullable = false)
-    private LocalDateTime createAt;
+    private LocalDate createAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updateAt;
