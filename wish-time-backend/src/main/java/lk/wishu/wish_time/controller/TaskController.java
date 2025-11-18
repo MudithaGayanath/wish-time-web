@@ -29,7 +29,7 @@ public class TaskController {
         try {
             return this.taskService.scheduleTasks(auth.split(" ")[1],data);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
