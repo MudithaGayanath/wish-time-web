@@ -6,6 +6,8 @@ import { RouterProvider } from "react-router/dom";
 import MainHeading from "./components/headings/MainHeading.jsx";
 import SubHeading from "./components/headings/SubHeading.jsx";
 import GetButton from "./components/buttons/GetButton.jsx";
+import SignInPage from "./pages/SignInPage.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
             <GetButton title={"get"} onClickFunction={()=>{}}/>
         </>,
     },
+    {
+        path:"/signIn",
+        element: <SignInPage/>
+    },
+    {
+        path:"*",
+        element:<PageNotFound/>
+    }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
