@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import MainHeading from "./components/headings/MainHeading.jsx";
+import SubHeading from "./components/headings/SubHeading.jsx";
+import GetButton from "./components/buttons/GetButton.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <div className="text-3xl">Hello World</div>,
+        element: <>
+            <MainHeading title={"sdfsd"} />
+            <SubHeading title={"sdfsdf"} />
+            <GetButton title={"get"} onClickFunction={()=>{}}/>
+        </>,
     },
 ]);
 
@@ -25,4 +30,4 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();

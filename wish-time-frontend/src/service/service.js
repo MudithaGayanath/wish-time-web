@@ -2,7 +2,7 @@ import {getApi } from './../api/api.js';
 import {HttpStatusCode} from "axios";
 
 const api = getApi();
-
+let token;
 export async function signIn(data) {
     console.log("signIn");
     const result = {
@@ -10,7 +10,7 @@ export async function signIn(data) {
       data:"",
     };
    try {
-       const response = await getApi().post("/auth/signIn",data);
+       const response = await api.post("/auth/signIn",data);
         result.data = response.data.token;
         return result;
    }catch(err) {
@@ -24,9 +24,6 @@ export async function signIn(data) {
 }
 
 const signInData = {
-    // "username":"Test_User_1",
-    // "password":"123456"
+    username:"Test_User_1",
+    password:""
 }
-
-const rs = await signIn(signInData);
-console.log(rs)
