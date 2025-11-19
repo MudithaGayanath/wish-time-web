@@ -10,14 +10,7 @@ import SignInPage from "./pages/SignInPage.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <>
-            <MainHeading title={"sdfsd"} />
-            <SubHeading title={"sdfsdf"} />
-            <GetButton title={"get"} onClickFunction={()=>{}}/>
-        </>,
-    },
+
     {
         path:"/signIn",
         element: <SignInPage/>
@@ -33,7 +26,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-      <RouterProvider router={router} />,
+      <RouterProvider router={router} />
   </React.StrictMode>
 );
 
