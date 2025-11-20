@@ -30,7 +30,7 @@ function TextField({
         placeholder={placeholder}
         onChange={onChange}
         disabled={disabled}
-        className={`w-full p-2 border rounded ${
+        className={`w-full h-12 p-2 border rounded ${
           error ? "border-red-500" : "border-gray-300"
         } ${disabled ? "opacity-75 bg-gray-100 cursor-not-allowed" : ""}`}
       />
