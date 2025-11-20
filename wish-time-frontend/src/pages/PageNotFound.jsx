@@ -1,4 +1,5 @@
 export  default function  PageNotFound(){
+    document.title='404 | Page not found';
     return (
             <div className="flex w-full h-screen items-center justify-center bg-gray-900 m-0 p-0  ">
                 <div className="text-center ">

@@ -3,17 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import MainHeading from "./components/headings/MainHeading.jsx";
-import SubHeading from "./components/headings/SubHeading.jsx";
-import GetButton from "./components/buttons/GetButton.jsx";
-import SignInPage from "./pages/SignInPage.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
+import AuthenticationPage from "./pages/authenticationPages/AuthenticationPage.jsx";
 
 const router = createBrowserRouter([
 
     {
-        path:"/signIn",
-        element: <SignInPage/>
+        path:"/authentication",
+        element: <AuthenticationPage/>
     },
     {
         path:"*",
