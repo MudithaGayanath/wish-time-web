@@ -1,4 +1,4 @@
-import {signIn} from "./../service/service.js"
+import {signIn} from "../service/userService.js"
 
 let token ;
 

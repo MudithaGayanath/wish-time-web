@@ -2,10 +2,53 @@ import MainHeading from "../../components/headings/MainHeading.jsx";
 import SubHeading from "../../components/headings/SubHeading.jsx";
 import TextField from "../../components/forms/TextField.jsx";
 import PostButton from "../../components/buttons/PostButton.jsx";
-import {signIn} from "../../service/service.js";
 import Checkbox from "../../components/forms/Checkbox.jsx";
+import {useState} from "react";
+import {signIn} from "./../../service/userService.js"
+import {Bounce, toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {useNavigate} from "react-router-dom";
 
 export default function SignInPage() {
+    const [username,setUsername] = useState("");
+    const [password,setPassword] = useState("");
+    //errors
+    const [usernameError,setUsernameError] = useState("");
+    const [passwordError,setPasswordError] = useState("");
+    const [credentialsError,setCredentialsError] = useState("");
+
+    //navigation
+    const navigate = useNavigate();
+
+    function clear(){
+        setUsernameError("");
+        setPasswordError("");
+    }
+
+    async function  handleSignIn() {
+        clear();
+        const result = await signIn({
+            username: username,password: password
+        })
+
+        if(!result.status){
+
+            if(result.data.username){
+                setUsernameError(result.data.username);
+            }
+            if(result.data.password){
+                setPasswordError(result.data.password);
+            }
+            if(result.data.credentials){
+                toast.error(result.data.credentials);
+            }
+
+        }else{
+            toast.success("Login successful!");
+            localStorage.setItem("token",result.data);
+            navigate("/home");
+        }
+    }
     return (
         <div className="    shadow-2xl rounded-2xl">
             <div className="  flex-row  ">
@@ -20,19 +63,17 @@ export default function SignInPage() {
                     <TextField
                         id={"username"}
                         label={"Username"}
-                        error={"Username is required"}
+                        error={usernameError}
                         type={"text"}
-                        value={"Muditha"}
-                        onChange={(v) => {
-                        }}
+                        value={username}
+                        onChange={(v) => { setUsername(v.target.value) }}
                     /> <TextField
                     id={"password"}
-                    label={"Username"}
-                    error={"Username is required"}
-                    type={"text"}
-                    value={"Muditha"}
-                    onChange={(v) => {
-                    }}
+                    label={"Password"}
+                    error={passwordError}
+                    type={"password"}
+                    value={password}
+                    onChange={(v) => {setPassword(v.target.value)} }
                 />
                     <Checkbox
                         title={"Remember me"}
@@ -40,8 +81,7 @@ export default function SignInPage() {
                     <div>
                         <PostButton
                             title="Sign In"
-                            onClickFunction={() => {
-                            }}
+                            onClickFunction={handleSignIn}
                         />
                     </div>
 

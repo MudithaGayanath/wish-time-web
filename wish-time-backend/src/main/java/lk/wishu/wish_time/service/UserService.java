@@ -77,28 +77,30 @@ public class UserService {
 
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+        }else{
+            try {
+                User user = this.getUserByUsername(data.getUsername());
+                if (passwordEncoder.matches(data.getPassword(), user.getPassword())) {
+                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword());
+                    Authentication authentication = authenticationManager.authenticate(token);
+                    if (authentication.isAuthenticated()) {
+                        SignInResponse res = new SignInResponse();
+                        res.setToken(jwtService.getJWTToken(user.getUserName()));
+                        return new ResponseEntity<>(res,HttpStatus.OK);
+                    } else {
+                        errors.put("auth", "Authentication Failed");
+                        return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.UNAUTHORIZED);
+                    }
+                } else {
+                    throw new UsernameNotFoundException("Invalid username or password");
+                }
+            } catch (UsernameNotFoundException | NullPointerException e) {
+                errors.put("credentials", "Username or password is incorrect");
+                return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
+            }
         }
 
-        try {
-            User user = this.getUserByUsername(data.getUsername());
-            if (passwordEncoder.matches(data.getPassword(), user.getPassword())) {
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), data.getPassword());
-                Authentication authentication = authenticationManager.authenticate(token);
-                if (authentication.isAuthenticated()) {
-                    SignInResponse res = new SignInResponse();
-                    res.setToken(jwtService.getJWTToken(user.getUserName()));
-                    return new ResponseEntity<>(res,HttpStatus.OK);
-                } else {
-                    errors.put("auth", "Authentication Failed");
-                    return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.UNAUTHORIZED);
-                }
-            } else {
-                throw new UsernameNotFoundException("Invalid username or password");
-            }
-        } catch (UsernameNotFoundException e) {
-            errors.put("credentials", "Username or password is incorrect");
-            return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
-        }
+
 
     }
 

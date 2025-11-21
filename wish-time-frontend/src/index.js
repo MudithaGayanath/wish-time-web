@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router/dom";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import AuthenticationPage from "./pages/authenticationPages/AuthenticationPage.jsx";
 
+import { ToastContainer} from "react-toastify";
 const router = createBrowserRouter([
 
     {
@@ -24,6 +25,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <RouterProvider router={router} />
+      <ToastContainer position="bottom-right" autoClose={5000} />
   </React.StrictMode>
 );
 
