@@ -8,14 +8,24 @@ import {signIn} from "./../../service/userService.js"
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useNavigate} from "react-router-dom";
+import {createCookie} from "react-router";
+
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+};
 
 export default function SignInPage() {
-    const [username,setUsername] = useState("");
-    const [password,setPassword] = useState("");
+    const [username,setUsername] = useState(getCookie("username") ? getCookie("username") : "");
+    const [password,setPassword] = useState(getCookie("password") ? getCookie("password") : "");
     //errors
     const [usernameError,setUsernameError] = useState("");
     const [passwordError,setPasswordError] = useState("");
     const [credentialsError,setCredentialsError] = useState("");
+
+
 
     //navigation
     const navigate = useNavigate();
@@ -46,7 +56,11 @@ export default function SignInPage() {
         }else{
             toast.success("Login successful!");
             localStorage.setItem("token",result.data);
-            navigate("/home");
+            if(document.getElementById("rm").checked){
+            document.cookie = "username="+username;
+            document.cookie = "password="+password;
+            }
+            // navigate("/home");
         }
     }
     return (
@@ -77,6 +91,7 @@ export default function SignInPage() {
                 />
                     <Checkbox
                         title={"Remember me"}
+                        id={"rm"}
                     />
                     <div>
                         <PostButton

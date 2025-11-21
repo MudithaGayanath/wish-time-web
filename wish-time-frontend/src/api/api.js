@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, {HttpStatusCode} from "axios";
 
 const instens = axios.create({
-    baseURL:"http://localhost:8080/api/v1",
-    timeout:5000,
+    baseURL: "http://localhost:8080/api/v1",
+    timeout: 5000,
     // headers:{
     //     Authorization: "Bearer " + localStorage.getItem("token")
     // }
@@ -16,5 +16,21 @@ instens.interceptors.request.use((config) => {
     return config;
 })
 
-export function getApi(){return instens;}
+instens.interceptors.response.use((response) => {
+        return response;
+    },
+     async (error) => {
+        console.log("Error")
+        if (error.response.status === HttpStatusCode.Unauthorized) {
+            console.log("response is unauthorized");
+            // if (localStorage.getItem("token")) {
+            await    localStorage.removeItem("token");
+            // }
+        }
+        return Promise.reject(error);
+    });
+
+export function getApi() {
+    return instens;
+}
 
