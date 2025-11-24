@@ -17,12 +17,11 @@ instens.interceptors.response.use((response) => {
         return response;
     },
      async (error) => {
-        console.log("Error")
         if (error.response.status === HttpStatusCode.Unauthorized) {
             console.log("response is unauthorized");
-            // if (localStorage.getItem("token")) {
-            await    localStorage.removeItem("token");
-            // }
+            if (localStorage.getItem("token")) {
+            await localStorage.removeItem("token");
+            }
         }
         return Promise.reject(error);
     });
