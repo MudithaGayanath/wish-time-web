@@ -7,11 +7,16 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import AuthenticationPage from "./pages/authenticationPages/AuthenticationPage.jsx";
 
 import { ToastContainer} from "react-toastify";
+import DashboardPage from "./pages/DashboardPage.jsx";
 const router = createBrowserRouter([
 
     {
         path:"/authentication",
         element: <AuthenticationPage/>
+    },
+    {
+        path:"/",
+        element:<DashboardPage/>
     },
     {
         path:"*",
