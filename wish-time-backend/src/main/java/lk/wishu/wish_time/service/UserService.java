@@ -15,7 +15,6 @@ import lk.wishu.wish_time.repository.UserRepo;
 import lk.wishu.wish_time.validation.UserValidation;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +78,7 @@ public class UserService {
 
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             try {
                 User user = this.getUserByUsername(data.getUsername());
                 if (passwordEncoder.matches(data.getPassword(), user.getPassword())) {
@@ -87,7 +87,7 @@ public class UserService {
                     if (authentication.isAuthenticated()) {
                         SignInResponse res = new SignInResponse();
                         res.setToken(jwtService.getJWTToken(user.getUserName()));
-                        return new ResponseEntity<>(res,HttpStatus.OK);
+                        return new ResponseEntity<>(res, HttpStatus.OK);
                     } else {
                         errors.put("auth", "Authentication Failed");
                         return new ResponseEntity<>(new ErrorResponse(errors), HttpStatus.UNAUTHORIZED);
@@ -102,12 +102,11 @@ public class UserService {
         }
 
 
-
     }
 
     public ResponseEntity<BaseResponse> insert(SignUpRequest data) {
 
-        HashMap<String,String> erros =  new HashMap<>();
+        HashMap<String, String> erros = new HashMap<>();
 //        //validation
         String firstNameError = validation.validateFirstName(data.getFirstName());
         String lastNameError = validation.validateLastName(data.getLastName());
@@ -115,24 +114,24 @@ public class UserService {
         String passwordError = validation.validatePassword(data.getPassword());
         String usernameError = validation.validateUsername(data.getUserName());
 
-        if(firstNameError != null){
+        if (firstNameError != null) {
             erros.put("firstName", firstNameError);
         }
-        if(lastNameError != null){
+        if (lastNameError != null) {
             erros.put("lastName", lastNameError);
         }
-        if(emailError != null){
+        if (emailError != null) {
             erros.put("email", emailError);
         }
-        if(passwordError != null){
+        if (passwordError != null) {
             erros.put("password", passwordError);
         }
-        if(usernameError != null){
+        if (usernameError != null) {
             erros.put("username", usernameError);
         }
 
-        if(!erros.isEmpty()){
-            return new ResponseEntity<>(new ErrorResponse(erros),HttpStatus.BAD_REQUEST);
+        if (!erros.isEmpty()) {
+            return new ResponseEntity<>(new ErrorResponse(erros), HttpStatus.BAD_REQUEST);
         }
         User user = new User();
         user.setUserName(data.getUserName());
@@ -145,6 +144,7 @@ public class UserService {
         user.setUserStatus(userStatusService.getUserStatusByStatusName(UserStatusService.ACTIVE));
         userRepo.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     public UserUpdateResponse update(UserUpdateRequest data) throws HibernateException {
@@ -181,10 +181,11 @@ public class UserService {
 
     /**
      * To verify user id is stored in the database
+     *
      * @param id
      * @return boolean
      */
-    protected boolean isValidId(int id){
+    protected boolean isValidId(int id) {
         return this.userRepo.findById(id).isPresent();
     }
 }
