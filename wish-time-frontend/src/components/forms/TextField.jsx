@@ -14,7 +14,7 @@ function TextField({
   return (
       <div className="mb-4 w-full ">
           {label && (
-              <label htmlFor={id} className="block mb-1">
+              <label htmlFor={id} id={id+"Error"} className="block mb-1">
                   {label}
                   {helperText && (
                       <small className=" text-gray-500 font-normal ms-2  ">

@@ -10,13 +10,15 @@ export default function AuthenticationPage() {
         setActivePage(<SignInPage/>)
     }
     function handleSignUpPage() {
-        setActivePage(<SignUpPage/>)
+        setActivePage(<SignUpPage navigation={()=>{
+            setActivePage(<SignInPage/>)
+        }}/>)
     }
 
     return (
         <div className="w-full  h-screen  ">
         {/*   auth nav start*/}
-            <div className=" w-full h-1/5 flex items-center justify-center gap-4">
+            <div className=" w-full h-[10%]   md:h-1/5 flex items-center justify-center gap-4">
                 <button className="bg-purple-500 h-12 w-20  rounded-s-2xl text-white"
                 onClick={handleSignInPage}>Sign In</button>
                 <button
@@ -26,7 +28,7 @@ export default function AuthenticationPage() {
         {/*   auth nav end*/}
 
         {/*    element start*/}
-            <div className="w-full h-4/5 flex items-center justify-center">
+            <div className="w-full h-4/5   flex items-center justify-center">
                 {activePage}
             </div>
         {/*    element end*/}
