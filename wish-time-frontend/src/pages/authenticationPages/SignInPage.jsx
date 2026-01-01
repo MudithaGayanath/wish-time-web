@@ -7,9 +7,11 @@ import PostButton from "../../components/buttons/PostButton.jsx";
 
 function SignInPage() {
     return (
-        <div className="w-1/2 h-fit flex-col flex justify-center items-center shadow-2xl rounded-2xl">
+        <div className="w-[90%] md:w-1/2 xl:w-[40%] h-fit flex-col flex justify-center items-center shadow-2xl rounded-2xl">
             {/*    title start*/}
-            <MainHeading title="Sign In"/>
+            <div className="p-4">
+                <MainHeading title="Sign In"/>
+            </div>
             {/*    title end*/}
             {/*    small text start*/}
             <div className="text-center">
@@ -31,9 +33,9 @@ function SignInPage() {
                        id={"password"}
                        label={"Password"}
                    />
-                <div className="flex justify-between">
-                    <Link to={"/forget_password"}>Forget Password</Link>
+                <div className="   flex   justify-between">
                     <Checkbox title="Remember me" />
+                    <Link to={"/forget_password"}>Forget Password?</Link>
                 </div>
                <div className={"mt-3"}>
                    <PostButton
