@@ -69,7 +69,7 @@ function SignUpPage({navigation }) {
 
     return (
         <div
-            className="w-[90%] md:w-1/2 h-fit mt-56 md:mt-20 xl:mt-0 flex-col flex justify-center items-center shadow-2xl rounded-2xl">
+            className="w-[90%] md:w-1/2 h-fit  mt-20 xl:mt-32 flex-col flex justify-center items-center shadow-2xl rounded-2xl">
             {/*    title start*/}
             <div className="p-4">
                 <MainHeading title="Sign Up"/>
