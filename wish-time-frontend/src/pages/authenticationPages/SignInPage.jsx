@@ -15,7 +15,7 @@ function SignInPage() {
             {/*    title end*/}
             {/*    small text start*/}
             <div className="text-center">
-                <Paragraph text="Welcome to the Wish Time Web App!"/>
+                <Paragraph text="Welcome back to the Wish Time Web App!"/>
                 <Paragraph text="Plase sign in to your account."/>
             </div>
             {/*    small text end*/}
