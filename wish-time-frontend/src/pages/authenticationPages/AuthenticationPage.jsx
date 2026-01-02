@@ -15,6 +15,7 @@ export default function AuthenticationPage() {
     function handleSignUpPage() {
         setActivePage("sign-up");
         setActiveElement(<SignUpPage navigation={() => {
+            setActivePage("sign-up");
             setActiveElement(<SignInPage/>)
         }}/>)
     }
