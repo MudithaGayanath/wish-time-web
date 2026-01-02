@@ -7,6 +7,7 @@ import PostButton from "../../components/buttons/PostButton.jsx";
 import React, {useState} from "react";
 import {signUp} from "./../../service/userService.js"
 import {useNavigate} from "react-router-dom";
+import {successToast} from "../../components/toasts/Toast.js";
 
 function SignUpPage({navigation }) {
 
@@ -55,7 +56,8 @@ function SignUpPage({navigation }) {
             }
 
         } else {
-            navigation();
+            successToast("Sign up successful");
+            setTimeout(()=> navigation(),3000);
         }
     }
 

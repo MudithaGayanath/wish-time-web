@@ -73,7 +73,7 @@ function SignInPage() {
 
                             } else {
                             successToast("Sign In Successful!");
-                            localStorage.setItem("token", rs.data.token);
+                            localStorage.setItem("token", rs.data);
                             setTimeout(() => {
                                 console.log("got to /"); navigate("/")}, 3000);
                             }
