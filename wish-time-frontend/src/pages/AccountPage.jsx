@@ -1,13 +1,27 @@
 import MainHeading from "../components/headings/MainHeading.jsx";
 import TextField from "../components/forms/TextField.jsx";
 import PostButton from "../components/buttons/PostButton.jsx";
-import React from "react";
+import React, {useState} from "react";
 import Image from "./../asset/image.png"
 
 export default function AccountPage (){
+    const [firstName, setFirstName] = useState("");
+    const [firstNameError, setFirstNameError] = useState("");
+
+    const [lastName, setLastName] = useState("");
+    const [lastNameError, setLastNameError] = useState("");
+
+    const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState("");
+
+    const [username, setUsername] = useState("");
+    const [usernameError, setUsernameError] = useState("");
+
+    const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     function handleProfileImageUpdate(){
       const imageFile =   document.getElementById("image");
-      imageFile.click();
+      imageFile.show();
        const image = imageFile.value;
     }
     return(
@@ -34,17 +48,17 @@ export default function AccountPage (){
                             id={"firstName"}
                             label={"First Name"}
                             type={"text"}
-                            // value={firstName}
-                            // error={firstNameError}
-                            // onChange={(e) => setFirstName(e.target.value)}
+                            value={firstName}
+                            error={firstNameError}
+                            onChange={(e) => setFirstName(e.target.value)}
                         />
                         <TextField
                             id={"lastName"}
                             label={"Last Name"}
                             type={"text"}
-                            // value={lastName}
-                            // error={lastNameError}
-                            // onChange={(e) => setLastName(e.target.value)}
+                            value={lastName}
+                            error={lastNameError}
+                            onChange={(e) => setLastName(e.target.value)}
                         />
                     </div>
 
@@ -53,28 +67,22 @@ export default function AccountPage (){
                         label={"Email"}
                         type={"email"}
                         disabled
-                        // value={email}
-                        // error={emailError}
-                        // onChange={(e) => setEmail(e.target.value)}
+                        value={email}
                     />
                     <TextField
                         id={"username"}
                         label={"Username"}
                         type={"text"}
                         disabled
-                        // value={username}
-                        // error={usernameError}
-                        // onChange={(e) => {
-                        //     setUsername(e.target.value)
-                        // }}
+                        value={username}
                     />
                     <TextField
                         id={"password"}
                         label={"Password"}
                         type={"password"}
-                        // value={password}
-                        // error={passwordError}
-                        // onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                        error={passwordError}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     <div className={"mt-3"}>
                         <PostButton

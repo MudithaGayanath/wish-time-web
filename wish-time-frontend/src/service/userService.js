@@ -41,4 +41,19 @@ export async function signUp(data) {
     }
 }
 
+export async function getUserData(){
+    const rs = {
+        firstName: "",
+        lastName: "",
+        username: "",
+        email:""
+    }
+    try{
+        const response = await  api.get("/user/getUser");
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
 

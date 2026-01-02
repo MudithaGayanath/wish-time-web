@@ -174,6 +174,13 @@ public class UserService {
         return userRepo.findByEmail(email).orElse(null);
     }
 
+    public void getUser(String tocken){
+        if (!this.jwtService.validateToken(tocken)){
+            return;
+        }
+
+
+    }
 
     public User getUserById(int userId) {
         return userRepo.findById(userId).orElse(null);

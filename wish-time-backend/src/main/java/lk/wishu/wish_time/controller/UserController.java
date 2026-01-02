@@ -26,14 +26,15 @@ public class UserController {
     @Autowired
     private UserValidation validation;
 
-    @GetMapping(value = "/getUser")
-    public ResponseEntity<User> getUser(@RequestParam int userId) {
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        ResponseEntity<User> response = new ResponseEntity<>(user, HttpStatus.OK);
-        return response;
+    @GetMapping(value = "/user/getUser")
+    public ResponseEntity<User> getUser(@RequestHeader(value = "Authorization") String token) {
+//        User user = userService.getUserById(userId);
+//        if (user == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        ResponseEntity<User> response = new ResponseEntity<>(user, HttpStatus.OK);
+//        return response;
+        return null;
     }
 
     @PutMapping(value = "/updateUser")
