@@ -6,8 +6,11 @@ import {Link} from "react-router";
 import PostButton from "../../components/buttons/PostButton.jsx";
 import {signIn} from "../../service/userService.js";
 import React, {useState} from "react";
+import {failureToast, successToast} from "../../components/toasts/Toast.js";
+import {useNavigate} from "react-router-dom";
 
 function SignInPage() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [usernameError, setUsernameError] = useState("");
 
@@ -28,32 +31,56 @@ function SignInPage() {
             {/*    small text end*/}
             {/* form start */}
             <div className=" grid grid-cols-1 p-8 w-full">
-                   <TextField
-                       id={"username"}
-                       label={"Username"}
-                       type={"text"}
-                       value={username}
-                       error={usernameError}
-                       onChange={(e) => setUsername(e.target.value)}
-                   />
                 <TextField
-                       id={"password"}
-                       label={"Password"}
-                       type={"password"}
-                       value={password}
-                       error={passwordError}
-                       onChange={(e) => setPassword(e.target.value)}
-                   />
+                    id={"username"}
+                    label={"Username"}
+                    type={"text"}
+                    value={username}
+                    error={usernameError}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                    id={"password"}
+                    label={"Password"}
+                    type={"password"}
+                    value={password}
+                    error={passwordError}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <div className="   flex   justify-between">
-                    <Checkbox title="Remember me" />
+                    <Checkbox title="Remember me"/>
                     <Link to={"/forget_password"}>Forget Password?</Link>
                 </div>
-               <div className={"mt-3"}>
-                   <PostButton
-                       title={"Sign In"}
-                       onClickFunction={()=>{}}
-                   />
-               </div>
+                <div className={"mt-3"}>
+                    <PostButton
+                        title={"Sign In"}
+                        onClickFunction={async () => {
+                            const rs = await signIn({username: username, password: password});
+                            if (!rs.status) {
+
+                                if (rs.data.username) {
+                                    setUsernameError(rs.data.username);
+                                }
+                                if (rs.data.password) {
+                                    setPasswordError(rs.data.password);
+                                }
+                                if (rs.data.auth) {
+                                    failureToast(rs.data.auth)
+                                }
+                                if (rs.data.credentials) {
+                                    failureToast(rs.data.credentials)
+                                }
+
+                            } else {
+                            successToast("Sign In Successful!");
+                            localStorage.setItem("token", rs.data.token);
+                            setTimeout(() => {
+                                console.log("got to /"); navigate("/")}, 3000);
+                            }
+                        }
+                        }
+                    />
+                </div>
             </div>
             {/* form end */}
         </div>

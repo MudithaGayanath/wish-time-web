@@ -1,0 +1,20 @@
+import {toast} from "react-toastify";
+
+const tostProps = {
+    position: "top-right",
+    autoClose: 3000,
+    type: ""
+}
+
+export function successToast(message) {
+    tostProps.type = "success";
+    return toast(message,tostProps)
+}
+export function failureToast(message) {
+    tostProps.type = "warning";
+    return toast(message,tostProps)
+}
+export function errorToast(message) {
+    tostProps.type = "error";
+    return toast(message,tostProps)
+}

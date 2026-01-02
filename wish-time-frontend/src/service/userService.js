@@ -16,9 +16,7 @@ export async function signIn(data) {
         result.status = true
         return result;
     } catch (err) {
-
         if (err.status === HttpStatusCode.BadRequest) {
-            console.log("Bad Request");
             result.data = err.response.data.errors;
         }
         return result;
@@ -45,13 +43,4 @@ export async function signUp(data) {
     }
 }
 
-const signUpData = {
-    "firstName": "John",
-    "lastName": "Doe",
-    "userName": "johndoe",
-    "password": "password123",
-    "email": "johndoe@example.com"
-}
-
-const rs = await signUp(signUpData);
-console.log(rs);
+ 
