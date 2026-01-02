@@ -4,8 +4,6 @@ import {HttpStatusCode} from "axios";
 const api = getApi();
 
 export async function signIn(data) {
-    console.log("signIn");
-    console.log(data);
     const result = {
         status: false,
         data: "",
@@ -43,4 +41,4 @@ export async function signUp(data) {
     }
 }
 
- 
+

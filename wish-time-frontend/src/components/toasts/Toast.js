@@ -3,7 +3,8 @@ import {toast} from "react-toastify";
 const tostProps = {
     position: "top-right",
     autoClose: 3000,
-    type: ""
+    type: "",
+    draggable: true
 }
 
 export function successToast(message) {

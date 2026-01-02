@@ -8,6 +8,7 @@ import AuthenticationPage from "./pages/authenticationPages/AuthenticationPage.j
 
 import { ToastContainer} from "react-toastify";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import AccountPage from "./pages/AccountPage.jsx";
 const router = createBrowserRouter([
 
     {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     {
         path:"/",
         element:<DashboardPage/>
+    },
+    {
+        path:"/account",
+        element: <AccountPage/>
     },
     {
         path:"*",

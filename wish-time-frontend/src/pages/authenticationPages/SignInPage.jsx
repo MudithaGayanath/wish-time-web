@@ -74,8 +74,7 @@ function SignInPage() {
                             } else {
                             successToast("Sign In Successful!");
                             localStorage.setItem("token", rs.data);
-                            setTimeout(() => {
-                                console.log("got to /"); navigate("/")}, 3000);
+                            setTimeout(() => {  navigate("/")}, 3000);
                             }
                         }
                         }
