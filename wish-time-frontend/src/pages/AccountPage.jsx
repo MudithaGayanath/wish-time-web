@@ -6,6 +6,7 @@ import Image from "./../asset/image.png"
 import {getUserData} from "../service/userService.js";
 import {errorToast} from "../components/toasts/Toast.js";
 import {useNavigate} from "react-router-dom";
+import Select from "../components/forms/Select.jsx";
 
 export default function AccountPage (){
     const navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function AccountPage (){
     useEffect(()=>{
         if(!isCalled){
 
-        fetchData()
+        // fetchData()
             isCalled = true;
         }
     },[])
@@ -74,7 +75,7 @@ export default function AccountPage (){
                         <input type={"file"}  className={"hidden"} id={"image"} />
                     </div>
                     {/*image end*/}
-                    <div className="grid  md:grid-cols-2 gap-4">
+                    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4">
                         <TextField
                             id={"firstName"}
                             label={"First Name"}
@@ -92,7 +93,6 @@ export default function AccountPage (){
                             onChange={(e) => setLastName(e.target.value)}
                         />
                     </div>
-
                     <TextField
                         id={"email"}
                         label={"Email"}
@@ -100,21 +100,46 @@ export default function AccountPage (){
                         disabled
                         value={email}
                     />
-                    <TextField
-                        id={"username"}
-                        label={"Username"}
-                        type={"text"}
-                        disabled
-                        value={username}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <TextField
+                            id={"username"}
+                            label={"Username"}
+                            type={"text"}
+                            disabled
+                            value={username}
+                        />
+                        <TextField
+                            id={"password"}
+                            label={"Password"}
+                            type={"password"}
+                            value={password}
+                            error={passwordError}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <TextField
+                                id={"createdAt"}
+                                label={"Joined Date"}
+                                type={"text"}
+                                disabled
+                                value=""
+                            />
+                            <TextField
+                                id={"updatedAt"}
+                                label={"Update Date"}
+                                type={"text"}
+                                disabled
+                                value=""
+                            />
+                        </div>
+                    <Select
+                    label="Status"
+                    options={[{value:"Active",label:"Active"}]}
                     />
-                    <TextField
-                        id={"password"}
-                        label={"Password"}
-                        type={"password"}
-                        value={password}
-                        error={passwordError}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+
+
                     <div className={"mt-3"}>
                         <PostButton
                             title={"Save Changes"}
