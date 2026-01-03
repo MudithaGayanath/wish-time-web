@@ -1,6 +1,7 @@
 package lk.wishu.wish_time.controller;
 
 import lk.wishu.wish_time.dto.request.UserUpdateRequest;
+import lk.wishu.wish_time.dto.response.BaseResponse;
 import lk.wishu.wish_time.dto.response.ErrorResponse;
 import lk.wishu.wish_time.dto.response.UserUpdateResponse;
 import lk.wishu.wish_time.entity.User;
@@ -27,14 +28,8 @@ public class UserController {
     private UserValidation validation;
 
     @GetMapping(value = "/user/getUser")
-    public ResponseEntity<User> getUser(@RequestHeader(value = "Authorization") String token) {
-//        User user = userService.getUserById(userId);
-//        if (user == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        ResponseEntity<User> response = new ResponseEntity<>(user, HttpStatus.OK);
-//        return response;
-        return null;
+    public ResponseEntity<BaseResponse> getUser(@RequestHeader(value = "Authorization") String token) {
+        return  userService.getUser(token);
     }
 
     @PutMapping(value = "/updateUser")
@@ -47,10 +42,6 @@ public class UserController {
 
     }
 
-//    @DeleteMapping(value = "/userDelete/${userId}")
-//    public ResponseEntity<Object> deleteUser(@RequestParam int userId) {
-//
-//    }
 
     private boolean validateUpdate(UserUpdateRequest data) {
         boolean status = true;

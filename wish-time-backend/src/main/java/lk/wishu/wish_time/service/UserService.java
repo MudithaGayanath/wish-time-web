@@ -6,10 +6,7 @@ package lk.wishu.wish_time.service;
 import lk.wishu.wish_time.dto.request.SignInRequest;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.dto.request.UserUpdateRequest;
-import lk.wishu.wish_time.dto.response.BaseResponse;
-import lk.wishu.wish_time.dto.response.ErrorResponse;
-import lk.wishu.wish_time.dto.response.SignInResponse;
-import lk.wishu.wish_time.dto.response.UserUpdateResponse;
+import lk.wishu.wish_time.dto.response.*;
 import lk.wishu.wish_time.entity.User;
 import lk.wishu.wish_time.repository.UserRepo;
 import lk.wishu.wish_time.validation.UserValidation;
@@ -174,10 +171,16 @@ public class UserService {
         return userRepo.findByEmail(email).orElse(null);
     }
 
-    public void getUser(String tocken){
+    public ResponseEntity<BaseResponse> getUser(String tocken){
         if (!this.jwtService.validateToken(tocken)){
-            return;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        UserResponse response = new UserResponse();
+        response.setUsername("sdfUsername");
+        response.setEmail("sdfEmail");
+        response.setFirstName("sdfFirstName");
+        response.setLastName("sdfLastName");
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
 
     }
