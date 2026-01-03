@@ -34,25 +34,30 @@ export async function signUp(data) {
         return result;
     } catch (err) {
         if (err.status === HttpStatusCode.BadRequest) {
-            console.log("Bad Request");
             result.data = err.response.data.errors;
         }
         return result;
     }
 }
 
-export async function getUserData(){
-    const rs = {
-        firstName: "",
-        lastName: "",
-        username: "",
-        email:""
-    }
-    try{
-        const response = await  api.get("/user/getUser");
+export async function getUserData() {
+    console.log("getUserData");
 
-    }catch(err){
+    const rs = {
+        status: false,
+        data: "",
+    }
+    try {
+        const response = await api.get("/user/getUser");
+        rs.data = response.data;
+        rs.status = true;
+        return rs;
+    } catch (err) {
         console.log(err);
+        if(err.status === HttpStatusCode.Unauthorized){
+            rs.data = "Unauthorized";
+        }
+        return rs;
     }
 }
 

@@ -1,10 +1,14 @@
 import MainHeading from "../components/headings/MainHeading.jsx";
 import TextField from "../components/forms/TextField.jsx";
 import PostButton from "../components/buttons/PostButton.jsx";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Image from "./../asset/image.png"
+import {getUserData} from "../service/userService.js";
+import {errorToast} from "../components/toasts/Toast.js";
+import {useNavigate} from "react-router-dom";
 
 export default function AccountPage (){
+    const navigate = useNavigate();
     const [firstName, setFirstName] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
 
@@ -19,6 +23,33 @@ export default function AccountPage (){
 
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+
+    async function fetchData(){
+       const rs = await getUserData();
+         console.log(rs)
+       if(rs.status){
+           setFirstName(rs.data.firstName);
+           setLastName(rs.data.lastName);
+           setEmail(rs.data.email);
+           setUsername(rs.data.username);
+       }else{
+           if(rs.data == "Unauthorized"){
+               errorToast("Token expired");
+               navigate("/authentication")
+           }
+       }
+    }
+    let isCalled = false;
+    useEffect(()=>{
+        if(!isCalled){
+
+        fetchData()
+            isCalled = true;
+        }
+    },[])
+
+
     function handleProfileImageUpdate(){
       const imageFile =   document.getElementById("image");
       imageFile.show();
