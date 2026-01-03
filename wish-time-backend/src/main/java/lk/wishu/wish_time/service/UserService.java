@@ -22,6 +22,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -171,17 +173,29 @@ public class UserService {
         return userRepo.findByEmail(email).orElse(null);
     }
 
-    public ResponseEntity<BaseResponse> getUser(String tocken){
-        if (!this.jwtService.validateToken(tocken)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<BaseResponse> getUser(String tocken) {
+        if (!this.jwtService.validateToken(tocken)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        UserResponse response = new UserResponse();
-        response.setUsername("sdfUsername");
-        response.setEmail("sdfEmail");
-        response.setFirstName("sdfFirstName");
-        response.setLastName("sdfLastName");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            User user = this.getUserByUsername(jwtService.getUsername(tocken));
+            if (user == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
+            UserResponse response = new UserResponse();
+            response.setUsername(user.getUserName());
+            response.setEmail(user.getEmail());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            response.setCreatedAt(user.getCreatedAt());
+            response.setUpdatedAt(user.getUpdatedAt());
+            response.setStatus(user.getUserStatus().getName());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 

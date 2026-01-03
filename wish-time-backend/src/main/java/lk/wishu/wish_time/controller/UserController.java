@@ -27,9 +27,9 @@ public class UserController {
     @Autowired
     private UserValidation validation;
 
-    @GetMapping(value = "/user/getUser")
+    @GetMapping(value = "/getUser")
     public ResponseEntity<BaseResponse> getUser(@RequestHeader(value = "Authorization") String token) {
-        return  userService.getUser(token);
+        return  userService.getUser(token.split(" ")[1]);
     }
 
     @PutMapping(value = "/updateUser")
