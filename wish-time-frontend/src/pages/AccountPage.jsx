@@ -7,6 +7,7 @@ import {getUserData} from "../service/userService.js";
 import {errorToast} from "../components/toasts/Toast.js";
 import {useNavigate} from "react-router-dom";
 import Select from "../components/forms/Select.jsx";
+import {getAllUserStatus} from "../service/userStatusService.js";
 
 export default function AccountPage (){
     const navigate = useNavigate();
@@ -25,6 +26,10 @@ export default function AccountPage (){
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
+
+    async function getAllStatus() {
+      await  getAllUserStatus();
+    }
 
     async function fetchData(){
        const rs = await getUserData();
@@ -45,7 +50,8 @@ export default function AccountPage (){
     useEffect(()=>{
         if(!isCalled){
 
-        // fetchData()
+        fetchData()
+            getAllStatus();
             isCalled = true;
         }
     },[])
