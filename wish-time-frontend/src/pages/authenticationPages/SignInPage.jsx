@@ -6,7 +6,7 @@ import {Link} from "react-router";
 import PostButton from "../../components/buttons/PostButton.jsx";
 import {signIn} from "../../service/userService.js";
 import React, {useState} from "react";
-import {failureToast, successToast} from "../../components/toasts/Toast.js";
+import { successToast, warningToast} from "../../components/toasts/Toast.js";
 import {useNavigate} from "react-router-dom";
 
 function SignInPage() {
@@ -65,10 +65,10 @@ function SignInPage() {
                                     setPasswordError(rs.data.password);
                                 }
                                 if (rs.data.auth) {
-                                    failureToast(rs.data.auth)
+                                    warningToast(rs.data.auth)
                                 }
                                 if (rs.data.credentials) {
-                                    failureToast(rs.data.credentials)
+                                    warningToast(rs.data.credentials)
                                 }
 
                             } else {

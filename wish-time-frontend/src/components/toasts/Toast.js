@@ -11,7 +11,7 @@ export function successToast(message) {
     tostProps.type = "success";
     return toast(message,tostProps)
 }
-export function failureToast(message) {
+export function warningToast(message) {
     tostProps.type = "warning";
     return toast(message,tostProps)
 }

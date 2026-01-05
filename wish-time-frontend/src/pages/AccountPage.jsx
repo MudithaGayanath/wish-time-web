@@ -4,12 +4,13 @@ import PostButton from "../components/buttons/PostButton.jsx";
 import React, {useEffect, useState} from "react";
 import Image from "./../asset/image.png"
 import {getUserData} from "../service/userService.js";
-import {errorToast} from "../components/toasts/Toast.js";
+import {errorToast, warningToast} from "../components/toasts/Toast.js";
 import {useNavigate} from "react-router-dom";
 import Select from "../components/forms/Select.jsx";
 import {getAllUserStatus} from "../service/userStatusService.js";
+import {HttpStatusCode} from "axios";
 
-export default function AccountPage (){
+export default function AccountPage() {
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
@@ -26,59 +27,81 @@ export default function AccountPage (){
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
+    const [userStatusArray, setUserStatusArray] = useState([{}]);
 
     async function getAllStatus() {
-      await  getAllUserStatus();
+        const rs = await getAllUserStatus();
+        if (rs.status_code == HttpStatusCode.Ok) {
+            const array = rs.data.map((status) => {
+                return {
+                    id: status.id,
+                    label: status.name,
+                    selected: false,
+                }
+            })
+            setUserStatusArray(array);
+            console.log("array", array);
+        } else if (rs.status_code == HttpStatusCode.Unauthorized) {
+            warningToast("Token expired");
+            navigate("/authentication")
+        }
     }
 
-    async function fetchData(){
-       const rs = await getUserData();
-         console.log(rs)
-       if(rs.status){
-           setFirstName(rs.data.firstName);
-           setLastName(rs.data.lastName);
-           setEmail(rs.data.email);
-           setUsername(rs.data.username);
-       }else{
-           if(rs.data == "Unauthorized"){
-               errorToast("Token expired");
-               navigate("/authentication")
-           }
-       }
+    async function fetchData() {
+        const rs = await getUserData();
+        console.log(rs)
+        if (rs.status) {
+            setFirstName(rs.data.firstName);
+            setLastName(rs.data.lastName);
+            setEmail(rs.data.email);
+            setUsername(rs.data.username);
+            setUserStatusArray((prevState) => {
+                const new_array = prevState.map(st => {
+                    st.selected = st.id == rs.data.statusId;
+                    return st;
+                })
+                return new_array;
+            })
+        } else {
+
+        }
     }
+
     let isCalled = false;
-    useEffect(()=>{
-        if(!isCalled){
+    useEffect(() => {
+        if (!isCalled) {
 
-        fetchData()
             getAllStatus();
+            fetchData();
             isCalled = true;
         }
-    },[])
+    }, [])
 
 
-    function handleProfileImageUpdate(){
-      const imageFile =   document.getElementById("image");
-      imageFile.show();
-       const image = imageFile.value;
+    function handleProfileImageUpdate() {
+        const imageFile = document.getElementById("image");
+        imageFile.show();
+        const image = imageFile.value;
     }
-    return(
+
+    return (
         <div className="w-full h-screen">
-        {/*    account details start*/}
+            {/*    account details start*/}
             <div className="w-1/2 rounded-2xl shadow">
-            {/*    title start*/}
-                <MainHeading title="Account Details" />
-            {/*    title end*/}
+                {/*    title start*/}
+                <MainHeading title="Account Details"/>
+                {/*    title end*/}
                 {/* form start */}
                 <div className=" grid grid-cols-1 p-8 w-full">
                     {/*image start*/}
                     <div className=" flex  justify-center items-center ">
-                        <img src={Image}  id="imagePreview" className="w-40 h-40 hover:border hover:border-dashed hover:bg-gray-50 hover:border-gray-600 hover:rounded-lg"
+                        <img src={Image} id="imagePreview"
+                             className="w-40 h-40 hover:border hover:border-dashed hover:bg-gray-50 hover:border-gray-600 hover:rounded-lg"
                              onClick={handleProfileImageUpdate}
-                             onMouseEnter={()=> document.getElementById("imageText").classList.remove("hidden")}
-                        onMouseLeave={()=> document.getElementById("imageText").classList.add("hidden")}/>
+                             onMouseEnter={() => document.getElementById("imageText").classList.remove("hidden")}
+                             onMouseLeave={() => document.getElementById("imageText").classList.add("hidden")}/>
                         <text className="absolute  hidden  " id="imageText">Change Image</text>
-                        <input type={"file"}  className={"hidden"} id={"image"} />
+                        <input type={"file"} className={"hidden"} id={"image"}/>
                     </div>
                     {/*image end*/}
                     <div className="grid  grid-cols-1 md:grid-cols-2 gap-4">
@@ -124,38 +147,39 @@ export default function AccountPage (){
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextField
-                                id={"createdAt"}
-                                label={"Joined Date"}
-                                type={"text"}
-                                disabled
-                                value=""
-                            />
-                            <TextField
-                                id={"updatedAt"}
-                                label={"Update Date"}
-                                type={"text"}
-                                disabled
-                                value=""
-                            />
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <TextField
+                            id={"createdAt"}
+                            label={"Joined Date"}
+                            type={"text"}
+                            disabled
+                            value=""
+                        />
+                        <TextField
+                            id={"updatedAt"}
+                            label={"Update Date"}
+                            type={"text"}
+                            disabled
+                            value=""
+                        />
+                    </div>
                     <Select
-                    label="Status"
-                    options={[{value:"Active",label:"Active"}]}
+                        label="Status"
+                        options={userStatusArray}
                     />
 
 
                     <div className={"mt-3"}>
                         <PostButton
                             title={"Save Changes"}
-                            onClickFunction={()=>{}}
+                            onClickFunction={() => {
+                            }}
                         />
                     </div>
                 </div>
                 {/* form end */}
             </div>
-        {/*    account details end*/}
+            {/*    account details end*/}
         </div>
     );
 }
