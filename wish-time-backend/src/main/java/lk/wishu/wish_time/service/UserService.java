@@ -190,7 +190,7 @@ public class UserService {
             response.setLastName(user.getLastName());
             response.setCreatedAt(user.getCreatedAt());
             response.setUpdatedAt(user.getUpdatedAt());
-            response.setStatus(user.getUserStatus().getName());
+            response.setStatusId(user.getUserStatus().getId());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);

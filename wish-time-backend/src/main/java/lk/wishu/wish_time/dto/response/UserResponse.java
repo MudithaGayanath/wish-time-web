@@ -15,6 +15,6 @@ public class UserResponse implements BaseResponse {
     private String username;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String status;
+    private int statusId;
 
 }
