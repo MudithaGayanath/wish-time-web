@@ -27,6 +27,9 @@ export default function AccountPage() {
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
+    const [joinedDate, setJoinedDate] = useState("");
+    const [updatedDate, setUpdatedDate] = useState("");
+
     const [userStatusArray, setUserStatusArray] = useState([{}]);
 
     async function getAllStatus() {
@@ -55,6 +58,8 @@ export default function AccountPage() {
             setLastName(rs.data.lastName);
             setEmail(rs.data.email);
             setUsername(rs.data.username);
+            setJoinedDate(rs.data.createdAt);
+            setUpdatedDate(rs.data.updatedAt);
             setUserStatusArray((prevState) => {
                 const new_array = prevState.map(st => {
                     st.selected = st.id == rs.data.statusId;
@@ -126,8 +131,8 @@ export default function AccountPage() {
                         id={"email"}
                         label={"Email"}
                         type={"email"}
-                        disabled
                         value={email}
+                        onChange={(v)=>setEmail(v)}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -153,7 +158,7 @@ export default function AccountPage() {
                             label={"Joined Date"}
                             type={"text"}
                             disabled
-                            value=""
+                            value={joinedDate}
                         />
                         <TextField
                             id={"updatedAt"}

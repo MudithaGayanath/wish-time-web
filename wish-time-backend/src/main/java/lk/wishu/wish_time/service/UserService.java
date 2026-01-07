@@ -3,6 +3,7 @@ package lk.wishu.wish_time.service;
 
 //import lk.wishu.dto.request.SignUpRequestDTO;
 
+import lk.wishu.wish_time.Util.Utils;
 import lk.wishu.wish_time.dto.request.SignInRequest;
 import lk.wishu.wish_time.dto.request.SignUpRequest;
 import lk.wishu.wish_time.dto.request.UserUpdateRequest;
@@ -146,7 +147,7 @@ public class UserService {
 
     }
 
-    public UserUpdateResponse update(UserUpdateRequest data) throws HibernateException {
+    public ResponseEntity<BaseResponse> update(UserUpdateRequest data) throws HibernateException {
         User user = this.getUserByUsername(data.getUserName());
         user.setFirstName(data.getFirstName());
         user.setLastName(data.getLastName());
@@ -166,7 +167,7 @@ public class UserService {
         response.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
 
 
-        return response;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public User getUserByEmail(String email) {
@@ -185,6 +186,7 @@ public class UserService {
 
             UserResponse response = new UserResponse();
             response.setUsername(user.getUserName());
+            response.setPassword(user.getPassword());
             response.setEmail(user.getEmail());
             response.setFirstName(user.getFirstName());
             response.setLastName(user.getLastName());

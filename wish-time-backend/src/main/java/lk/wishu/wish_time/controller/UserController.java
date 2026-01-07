@@ -33,12 +33,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/updateUser")
-    public ResponseEntity<Object> update(@RequestBody UserUpdateRequest data) {
-        if(validateUpdate(data)){
-            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-        }else{
-            return new ResponseEntity<>(userService.update(data), HttpStatus.OK);
-        }
+    public ResponseEntity<Object> update(@RequestBody UserUpdateRequest data,@RequestHeader(value = "Authorization") String token) {
+
 
     }
 

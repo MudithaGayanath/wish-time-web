@@ -11,10 +11,10 @@ import {useNavigate} from "react-router-dom";
 
 function SignInPage() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState("muditha");
     const [usernameError, setUsernameError] = useState("");
 
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState("Mudi1");
     const [passwordError, setPasswordError] = useState("");
     return (
         <div className="w-[90%] md:w-1/2 h-fit flex-col flex justify-center items-center shadow-2xl rounded-2xl">
